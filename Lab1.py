@@ -63,3 +63,12 @@ grammar = Grammar()
 
 grammar.generate5Words()
 
+
+finiteAutomaton = grammar.toFiniteAutomaton()
+
+testString1 = 'dd'
+testString2 = 'dabcabadd'
+testString3 = 'dabadabade'
+print(f"\nString '{testString1}': \n Validation: {finiteAutomaton.accepts_string(testString1)}\n")
+print(f"String '{testString2}': \n Validation: {finiteAutomaton.accepts_string(testString2)}\n")
+print(f"String '{testString3}': \n Validation: {finiteAutomaton.accepts_string(testString3)}")
