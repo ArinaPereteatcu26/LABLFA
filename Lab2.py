@@ -12,3 +12,17 @@ class FiniteAutomaton:
         self.q0 = 'q0'
         self.F = ['q3']
 
+    def convert_to_grammar(self):
+        S = self.Q[0]
+        Vn = self.Q
+        Vt = self.Sigma
+        P = []
+        for state in self.Q:
+            for symbol in self.Sigma:
+                if (state, symbol) in self.Delta:
+                    next_states = self.Delta[(state, symbol)]
+                    for next_state in next_states:
+                        P.append((state, symbol, next_state))
+        for final_state in self.F:
+            P.append((final_state, '', 'e'))
+
