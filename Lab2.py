@@ -1,7 +1,7 @@
 class FiniteAutomaton:
     def __init__(self):
-        self.Q = ['q0','q1','q2','q3']
-        self.Sigma = ['a','b','c']
+        self.Q = ['q0', 'q1', 'q2', 'q3']
+        self.Sigma = ['a', 'b', 'c']
         self.Delta = {
             ('q0', 'a'): ['q0', 'q1'],
             ('q1', 'b'): ['q2'],
@@ -13,7 +13,7 @@ class FiniteAutomaton:
         self.F = ['q3']
 
     def convert_to_grammar(self):
-        S = self.Q[0]
+        S = self.q0
         Vn = self.Q
         Vt = self.Sigma
         P = []
@@ -42,19 +42,18 @@ class FiniteAutomaton:
         transitions = {}
         new_states = [initial_state]
         while new_states:
-            for state in new_states:
-                new_states.remove(state)
-                if state not in transitions.keys():
-                    transitions[state] = {}
-                    for el in input_symbols:
-                        next_states = set()
-                        for s in state.split(','):
-                            if (s, el) in self.Delta.keys():
-                                next_states.update(self.Delta[(s, el)])
-                        next_states = ','.join(sorted(list(next_states)))
-                        transitions[state][el] = next_states
-                        if next_states not in transitions.keys() and next_states != '':
-                            new_states.append(next_states)
+            state = new_states.pop()
+            if state not in transitions:
+                transitions[state] = {}
+                for el in input_symbols:
+                    next_states = set()
+                    for s in state.split(','):
+                        if (s, el) in self.Delta:
+                            next_states.update(self.Delta[(s, el)])
+                    next_states = ','.join(sorted(list(next_states)))
+                    transitions[state][el] = next_states
+                    if next_states not in transitions and next_states != '':
+                        new_states.append(next_states)
 
         states = list(transitions.keys())
 
@@ -64,12 +63,13 @@ class FiniteAutomaton:
         print(f"q0 = {initial_state}")
         print(f"F = {final_states}")
 
-    class Grammar:
-        def __init__(self, S, Vn, Vt, P):
-            self.S = S
-            self.V_n = Vn
-            self.V_t = Vt
-            self.P = P
+
+class Grammar:
+    def __init__(self, S, Vn, Vt, P):
+        self.S = S
+        self.Vn = Vn
+        self.Vt = Vt
+        self.P = P
 
     def show_grammar(self):
         print("VN = {", ', '.join(map(str, self.Vn)), '}')
@@ -78,4 +78,20 @@ class FiniteAutomaton:
         for el in self.P:
             a, b, c = el
             print(f"    {a} -> {b}{c}")
-            print("}")
+        print("}")
+
+
+# main
+finite_automaton = FiniteAutomaton()
+grammar = finite_automaton.convert_to_grammar()
+print("Grammar:")
+grammar.show_grammar()
+print()
+
+if not finite_automaton.check_deterministic():
+    print('NDFA\n')
+else:
+    print('DFA\n')
+
+print("Deterministic Finite Automaton:")
+finite_automaton.nfa_to_dfa()
