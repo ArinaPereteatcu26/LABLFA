@@ -25,6 +25,7 @@ class FiniteAutomaton:
                         P.append((state, symbol, next_state))
         for final_state in self.F:
             P.append((final_state, '', 'e'))
+        return Grammar(S, Vn, Vt, P)
 
     def check_deterministic(self):
         for _, value in self.Delta.items():
@@ -62,3 +63,19 @@ class FiniteAutomaton:
         print(f"Delta = {transitions}")
         print(f"q0 = {initial_state}")
         print(f"F = {final_states}")
+
+    class Grammar:
+        def __init__(self, S, Vn, Vt, P):
+            self.S = S
+            self.V_n = Vn
+            self.V_t = Vt
+            self.P = P
+
+    def show_grammar(self):
+        print("VN = {", ', '.join(map(str, self.Vn)), '}')
+        print("VT = {", ', '.join(map(str, self.Vt)), '}')
+        print("P = { ")
+        for el in self.P:
+            a, b, c = el
+            print(f"    {a} -> {b}{c}")
+            print("}")
