@@ -89,7 +89,7 @@ grammar.show_grammar()
 print()
 
 if not finite_automaton.check_deterministic():
-    print('NDFA\n')
+    print('NFA\n')
 else:
     print('DFA\n')
 
