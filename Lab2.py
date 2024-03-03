@@ -26,3 +26,8 @@ class FiniteAutomaton:
         for final_state in self.F:
             P.append((final_state, '', 'e'))
 
+    def check_deterministic(self):
+        for _, value in self.Delta.items():
+            if len(value) > 1:
+                return False
+        return True
