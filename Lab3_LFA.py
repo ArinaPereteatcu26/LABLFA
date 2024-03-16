@@ -10,6 +10,16 @@ tokens = (
     'NUMBER',
 )
 
+# Regular expression rules for tokens
+t_START = r'start'
+t_END = r'end'
+t_MOVE = r'move'
+t_ROTATE = r'rotate'
+t_DEPTH = r'depth'
+t_NUMBER = r'[0-9]+'
+
+# Ignored characters (whitespace)
+t_ignore = ' \t\r\n'
 
 
 
