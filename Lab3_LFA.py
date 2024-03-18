@@ -29,7 +29,9 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-# Test the lexer
+# Test
+
+
 #lexer.input('start move depth 5 rotate 60 end')
 
 lexer.input('start move depth $5 rotate 60 end')
