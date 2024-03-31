@@ -40,3 +40,24 @@ def show_processing_sequence(regex_pattern):
         elif char == '}':
             sequence.append("End of a range")
     return sequence
+
+
+# Function to generate and explain regex patterns
+def generate_and_explain(regex_patterns):
+    for regex in regex_patterns:
+        generated_str = generate_string_regex(regex)
+        print(f"String matching the regex '{regex}': {generated_str}")
+        sequence = show_processing_sequence(regex)
+        for step, explanation in enumerate(sequence, start=1):
+            print(f"Phase {step}: {explanation}")
+        print()
+
+# List of regex patterns
+regex_patterns = [
+    r'O(P|Q|R)^+ 2(3|4)',
+    r'A*B(C|D|E) E(G|H|i)^2',
+    r'J^+K(L|M|N)*O? (P|Q)^3'
+]
+
+# Generate and explain regex patterns
+generate_and_explain(regex_patterns)
