@@ -55,7 +55,7 @@ def generate_and_explain(regex_patterns):
 # List of regex patterns
 regex_patterns = [
     r'O(P|Q|R)^+ 2(3|4)',
-    r'A*B(C|D|E) E(G|H|i)^2',
+    r'A*B(C|D|E) F(G|H|i)^2',
     r'J^+K(L|M|N)*O? (P|Q)^3'
 ]
 
