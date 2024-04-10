@@ -85,6 +85,9 @@ regex_list = [
 ]
 
 
+
+
+
 generated_strings_list = generate_strings_for_regex(regex_list)
 print("Generated strings for each regex:")
 for i, regex_strings in enumerate(generated_strings_list):
