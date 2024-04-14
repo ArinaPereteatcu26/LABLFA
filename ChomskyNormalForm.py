@@ -45,3 +45,36 @@ class Grammar():
         self.P = P1.copy()
         return P1
 
+    def Eliminate_Unit_Prod(self):
+        # 2. Eliminate any remaining (unit productions)
+        # new productions for next step
+        P2 = self.P.copy()
+        for key, value in self.P.items():
+            # replace unit productions
+            for v in value:
+                if len(v) == 1 and v in self.V_N:
+                    P2[key].remove(v)
+                    for p in self.P[v]:
+                        P2[key].append(p)
+        print(f"2. After removing unit productions:\n{P2}")
+        self.P = P2.copy()
+        return P2
+
+    def Eliminate_Inaccesible_Symbols(self):
+        # 3. Eliminate inaccesible symbols
+        P3 = self.P.copy()
+        accesible_symbols = self.V_N
+        # find elements that are inaccesible
+        for key, value in self.P.items():
+            for v in value:
+                for s in v:
+                    if s in accesible_symbols:
+                        accesible_symbols.remove(s)
+        # remove inaccesible symbols
+        for el in accesible_symbols:
+            del P3[el]
+        print(f"3. After removing inaccesible symbols:\n{P3}")
+        self.P = P3.copy()
+        return P3
+
+
