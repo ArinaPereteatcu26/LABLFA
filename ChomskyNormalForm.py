@@ -77,4 +77,38 @@ class Grammar():
         self.P = P3.copy()
         return P3
 
+    def Remove_Nonproductive(self):
+        # 4. Remove non-productive symbols
+        P4 = self.P.copy()
+
+        # Check the keys
+        for key, value in self.P.items():
+            count = 0
+            # identify non-productive symbols
+            for v in value:
+                if len(v) == 1 and v in self.V_T:
+                    count += 1
+            # remove non-productive symbols
+            if count == 0 and key not in self.V_T:
+                del P4[key]
+                for k, v in self.P.items():
+                    for e in v:
+                        if k == key:
+                            break
+                        else:
+                            if key in e:
+                                P4[k].remove(e)
+
+                # Check the values
+            for key, value in self.P.items():
+                for v in value:
+                    for c in v:
+                        if c.isupper() and c not in P4.keys() and c != key:
+                            P4[key].remove(v)
+                            break
+
+            print(f"4. After removing non-productive symbols:\n{P4}")
+            self.P = P4.copy()
+            return P4
+
 
