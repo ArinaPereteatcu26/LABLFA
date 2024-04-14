@@ -111,4 +111,53 @@ class Grammar():
             self.P = P4.copy()
             return P4
 
+    def Chomsky_Normal_Form(self):
+        # 5. Obtain CNF
+        P5 = self.P.copy()
+        temp = {}
+        vocabulary = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+                      'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+        free_symbols = [v for v in vocabulary if v not in self.P.keys()]
+        for key, value in self.P.items():
+            for v in value:
+                if (len(v) == 1 and v in self.V_T) or (len(v) == 2 and v.isupper()):
+                    continue
+                else:
+                    # split production into two parts
+                    left = v[:len(v) // 2]
+                    right = v[len(v) // 2:]
+                    # get the new symbols for each half
+                    if left in temp.values():
+                        temp_key1 = ''.join([i for i in temp.keys() if temp[i] == left])
+                    else:
+                        temp_key1 = free_symbols.pop(0)
+                        temp[temp_key1] = left
+                    if right in temp.values():
+                        temp_key2 = ''.join([i for i in temp.keys() if temp[i] == right])
+                    else:
+                        temp_key2 = free_symbols.pop(0)
+                        temp[temp_key2] = right
+                    # replace the production with the new symbols
+                    P5[key] = [temp_key1 + temp_key2 if item == v else item for item in P5[key]]
+
+        # add new productions
+        for key, value in temp.items():
+            P5[key] = [value]
+
+        print(f"5. Final CNF:\n{P5}")
+        return P5
+
+    def Return_Productions(self):
+        print(f"Initial Grammar:\n{self.P}")
+        P1 = self.Remove_Epsilon()
+        P2 = self.Eliminate_Unit_Prod()
+        P3 = self.Eliminate_Inaccesible_Symbols()
+        P4 = self.Remove_Nonproductive()
+        P5 = self.Chomsky_Normal_Form()
+        return P1, P2, P3, P4, P5
+
+
+if __name__ == "__main__":
+    g = Grammar()
+    P1, P2, P3, P4, P5 = g.Return_Productions()
 
