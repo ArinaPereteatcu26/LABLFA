@@ -2,7 +2,7 @@ from enum import Enum, auto
 import re
 from anytree import Node, RenderTree
 
-class TokenType(Enum):
+class token_type(Enum):
     OPEN_PARENTHESIS = auto()
     CLOSE_PARENTHESIS = auto()
     MATH_OPERATION = auto()
@@ -10,18 +10,18 @@ class TokenType(Enum):
     START = auto()
 
 transations = {
-    TokenType.OPEN_PARENTHESIS: [TokenType.NUMBERS, TokenType.OPEN_PARENTHESIS],
-    TokenType.MATH_OPERATION: [TokenType.NUMBERS, TokenType.OPEN_PARENTHESIS],
-    TokenType.CLOSE_PARENTHESIS: [TokenType.MATH_OPERATION, TokenType.CLOSE_PARENTHESIS],
-    TokenType.NUMBERS: [TokenType.NUMBERS, TokenType.CLOSE_PARENTHESIS, TokenType.MATH_OPERATION],
-    TokenType.START: [TokenType.OPEN_PARENTHESIS, TokenType.NUMBERS]
+    token_type.OPEN_PARENTHESIS: [token_type.NUMBERS, token_type.OPEN_PARENTHESIS],
+    token_type.MATH_OPERATION: [token_type.NUMBERS, token_type.OPEN_PARENTHESIS],
+    token_type.CLOSE_PARENTHESIS: [token_type.MATH_OPERATION, token_type.CLOSE_PARENTHESIS],
+    token_type.NUMBERS: [token_type.NUMBERS, token_type.CLOSE_PARENTHESIS, token_type.MATH_OPERATION],
+    token_type.START: [token_type.OPEN_PARENTHESIS, token_type.NUMBERS]
 }
 
 data = {
-    TokenType.OPEN_PARENTHESIS: [r"\(", r"\["],
-    TokenType.CLOSE_PARENTHESIS: [r"\)", r"\]"],
-    TokenType.MATH_OPERATION: [r"[+\-*/%^]"],
-    TokenType.NUMBERS: [r"\d+"]
+    token_type.OPEN_PARENTHESIS: [r"\(", r"\["],
+    token_type.CLOSE_PARENTHESIS: [r"\)", r"\]"],
+    token_type.MATH_OPERATION: [r"[+\-*/%^]"],
+    token_type.NUMBERS: [r"\d+"]
 }
 class Lexer:
     def __init__(self,equation):
@@ -30,15 +30,15 @@ class Lexer:
     def lexer(self):
         self.equation = self.equation.replace(" ", "")
         seq_parenthesis = []
-        category_mapping = [TokenType.START]
+        category_mapping = [token_type.START]
         failed_on = ""
         valid_tokens = []
 
         for symbol in self.equation:
             # Parenthesis handling
-            if symbol in data[TokenType.OPEN_PARENTHESIS]:
+            if symbol in data[token_type.OPEN_PARENTHESIS]:
                 seq_parenthesis.append(symbol)
-            elif symbol in data[TokenType.CLOSE_PARENTHESIS]:
+            elif symbol in data[token_type.CLOSE_PARENTHESIS]:
                 if not seq_parenthesis:
                     print(f"ERROR: Extra closing parenthesis found.")
                     print(f"Failed on symbol {failed_on}")
@@ -83,3 +83,28 @@ class Lexer:
             return False
         return category_mapping, valid_tokens
 
+class Parser:
+    def __init__(self, category_mapping, valid_tokens):
+        self.category_mapping = category_mapping
+        self.valid_tokens = valid_tokens
+
+    def parse(self):
+        root = Node(self.category_mapping[0].name)
+        parent = root
+        for token, category in zip(self.valid_tokens, self.category_mapping[1:]):
+            node = Node(token, parent=parent)
+            parent = Node(category.name, parent=parent)
+
+        for pre, _, node in RenderTree(root):
+            print("%s%s" % (pre, node.name))
+
+
+
+test_equation = "2*(3+4)"
+
+
+lexer = Lexer(test_equation)
+category_mapping, valid_tokens = lexer.lexer()
+print(category_mapping)
+print(valid_tokens)
+Parser(category_mapping, valid_tokens).parse()
